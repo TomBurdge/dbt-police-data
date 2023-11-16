@@ -60,7 +60,7 @@ def get_stop_search_data(url_pairs: str):
                  ('operation_name', pl.Utf8),
                  ('object_of_search', pl.Utf8)]
     for i, url_pair in enumerate(url_pairs):
-        force = url_pair[0]
+        force = url_pair[0].replace("-", " ")
         url = url_pair[1]
         print(i, "/", len(url_pairs), "Police URLs processed.")
         r = requests.get(url)
@@ -101,6 +101,6 @@ def model(dbt, session):
     url = "https://data.police.uk/api/crimes-street-dates"
     force_url_pairs = get_available_data(url)
 
-    df = get_stop_search_data(force_url_pairs)
+    df = get_stop_search_data(force_url_pairs).with_columns(pl.col("force"))
 
     return df
