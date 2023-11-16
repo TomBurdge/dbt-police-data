@@ -7,6 +7,9 @@ This project involves:
 
 Typically, as with this project, I like to explore tools such as DBT through *doing* after a very quick use of the example projects provided in documentation.
 
+
+## On Python
+
 The dbt-duckdb plugin integrates well with python models, which is awesome.
 
 Python is necessary for the initial API calls and downloads, but my aim is to create the transformation models with SQL. 
