@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "data-science-repo-template-v2"
+version = "0.1.0"
+description = ""
+authors = ["tom-burdge <tomburdge@wessexinsights.com>"]
+readme = "README.md"
+packages = [{include = "data_science_repo_template_v2", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+dbt-duckdb = "^1.7.0"
+polars = "^0.19.13"
+requests = "^2.31.0"
+pyarrow = "^14.0.1"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+ruff = "^0.0.284"
+pytest = "^7.4.0"
+pre-commit = "^3.3.3"
+nbqa = "^1.7.0"
+nbstripout = "^0.6.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
