@@ -74,6 +74,12 @@ def get_stop_search_data(url_pairs: str):
                 pl.DataFrame(content, schema=df_schema)
                 .unnest("outcome_object")
                 .with_columns(pl.lit(force).alias("force"))
+                .with_columns(
+                    pl.col("datetime").str.strptime(
+                        pl.Datetime,
+                        "%Y-%m-%dT%H:%M:%S%z",
+                    )
+                )
             )
             if df is None:
                 df = result
