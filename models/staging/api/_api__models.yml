@@ -59,3 +59,6 @@ models:
 
       - name: object_of_search
         description: The object that was the focus of the search.
+
+      - name: month
+        description: month for these stop and searches.

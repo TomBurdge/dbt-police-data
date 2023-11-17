@@ -20,16 +20,18 @@ def get_available_data(available_data: str):
     r = requests.get(available_data)
     searches = json.loads(r.content)
 
-    url_pairs = set()
+    url_tuples = set()
+    base_url = "https://data.police.uk/api/stops-no-location?"
     for dict in searches:
         forces = dict.get("stop-and-search")
+        date = dict.get("date")
         for force in forces:
-            url = f"https://data.police.uk/api/stops-no-location?force={force}"
-            url_pairs.add((force, url))
-    return url_pairs
+            url = base_url + f"force={force}&date={date}"
+            url_tuples.add((force, date, url))
+    return url_tuples
 
 
-def get_stop_search_data(url_pairs: str):
+def get_stop_search_data(url_tuples: str):
     """
     The function `get_stop_search_data` retrieves data from multiple URLs,
     processes the content, and returns a DataFrame containing the results.
@@ -63,37 +65,47 @@ def get_stop_search_data(url_pairs: str):
         ("operation_name", pl.Utf8),
         ("object_of_search", pl.Utf8),
     ]
-    for i, url_pair in enumerate(url_pairs):
-        force = url_pair[0].replace("-", " ")
-        url = url_pair[1]
-        print(i, "/", len(url_pairs), "Police URLs processed.")
+    for i, url_tuple in enumerate(url_tuples):
+        force = url_tuple[0].replace("-", " ")
+        date = url_tuple[1]
+        url = url_tuple[2]
+        print(i, "/", len(url_tuples), "Police URLs processed.")
         r = requests.get(url)
         content = json.loads(r.content)
-        if content:
-            result = (
-                pl.DataFrame(content, schema=df_schema)
-                .unnest("outcome_object")
-                .with_columns(pl.lit(force).alias("force"))
-                .with_columns(
-                    pl.col("datetime").str.strptime(
-                        pl.Datetime,
-                        "%Y-%m-%dT%H:%M:%S%z",
+        try:
+            if content:
+                result = (
+                    pl.DataFrame(content, schema=df_schema)
+                    .unnest("outcome_object")
+                    .with_columns(pl.lit(force).alias("force"))
+                    # .with_columns(
+                    #     pl.col("datetime")
+                    #     # .str.rstrip("+00:00")
+                    #     .str.strptime(
+                    #         pl.Datetime,
+                    #         "%Y-%m-%dT%H:%M:%S%z",
+                    #     )
+                    # )
+                    .with_columns(
+                        pl.lit(date)
+                        .alias("month")
+                        .str.strptime(
+                            pl.Datetime,
+                            "%Y-%m",
+                        )
                     )
                 )
-            )
-            if df is None:
-                df = result
+                if df is None:
+                    df = result
 
-            else:
-                try:
+                else:
                     df = df.vstack(result)
-                except Exception as e:
-                    print("An Error occured while calling the API : ", e)
-                    print(df.schema)
-                    exit()
 
-            # see api call limits: https://data.police.uk/docs/api-call-limits/
-            time.sleep(0.01)
+                # see api call limits: https://data.police.uk/docs/api-call-limits/
+                time.sleep(0.01)
+        except Exception as e:
+            print("An Error occured while calling the API : ", e)
+            exit()
     return df
 
 
@@ -116,3 +128,7 @@ def model(dbt, session):
     df = get_stop_search_data(force_url_pairs).with_columns(pl.col("force"))
 
     return df
+
+
+if __name__ == "__main__":
+    model("hello", "world")
