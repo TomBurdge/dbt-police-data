@@ -101,7 +101,8 @@ def get_stop_search_data(url_tuples: str):
                 else:
                     df = df.vstack(result)
 
-                # see api call limits: https://data.police.uk/docs/api-call-limits/
+                # see api call limits:
+                # https://data.police.uk/docs/api-call-limits/
                 time.sleep(0.01)
         except Exception as e:
             print("An Error occured while calling the API : ", e)
