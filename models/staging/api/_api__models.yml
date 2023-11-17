@@ -8,3 +8,54 @@ models:
     config:
       materialized: table
       tags: ['python']
+
+    columns:
+      - name: age_range
+        description: Age range of the individual stopped and searched
+      - name: outcome
+        description: Outcome of the stop and search.
+
+      - name: involved_person
+        description: Indicates whether a person was involved.
+
+      - name: self_defined_ethnicity
+        description: The ethnicity of the individual as self-defined.
+
+      - name: gender
+        description: Gender of the individual involved.
+
+      - name: legislation
+        description: The legislation under which the stop and search was conducted.
+
+      - name: id
+        description: Outcome id (categorical).
+
+      - name: name
+        description: Outcome name.
+
+      - name: datetime
+        description: The date and time of the incident.
+
+      - name: removal_of_more_than_outer_clothing
+        description: Indicates if more than outer clothing was removed during the search.
+
+      - name: outcome_object
+        description: A structured field containing details about the outcome, including ID and name.
+
+      - name: location
+        description: The location where the incident occurred.
+
+      - name: operation
+        description: Indicates if the incident was part of a police operation.
+
+      - name: officer_defined_ethnicity
+        description: The ethnicity of the individual as defined by the officer.
+
+      - name: type
+        description: The type of incident.
+
+      - name: operation_name
+        description: The name of the operation under which the incident occurred.
+
+      - name: object_of_search
+        description: The object that was the focus of the search.
