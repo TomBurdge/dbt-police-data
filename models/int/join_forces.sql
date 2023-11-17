@@ -20,7 +20,7 @@ stop_searches_forces AS(
     forces."Formed",
     forces."Legal Jurisdiction",
     stop_searches.force AS force,
-    date_trunc('month', stop_searches.datetime) AS month
+    month
   FROM {{ ref("stg_api__stop_search")}} AS stop_searches
   LEFT JOIN forces
   ON stop_searches.force = forces.force
