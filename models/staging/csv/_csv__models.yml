@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_csv__workforce
+  - name: stg_csv__workforce_by_ethnicity
 
     description: Police Workforce by Ethnicity Data
 
