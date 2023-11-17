@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: stg_api__stop_search
+
+    description: UK Stop and Search Data
+
+    config:
+      materialized: table
+      tags: ['python']

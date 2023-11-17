@@ -1,0 +1,8 @@
+version: 2
+
+models:
+  - name: forces
+    description: This model creates an external table pointing to a Parquet file
+    config:
+      materialized: external
+      location: 'file.parquet'
