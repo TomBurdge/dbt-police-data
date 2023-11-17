@@ -42,24 +42,27 @@ def get_stop_search_data(url_pairs: str):
     :return: a DataFrame object.
     """
     df = None
-    df_schema = [('age_range', pl.Utf8),
-                 ('outcome', pl.Utf8),
-                 ('involved_person', pl.Boolean),
-                 ('self_defined_ethnicity', pl.Utf8),
-                 ('gender', pl.Utf8), 
-                 ('legislation', pl.Utf8),
-                 ('outcome_linked_to_object_of_search', pl.Boolean),
-                 ('datetime', pl.Utf8),
-                 ('removal_of_more_than_outer_clothing', pl.Boolean),
-                 ('outcome_object',
-                  pl.Struct([pl.Field('id', pl.Utf8),
-                             pl.Field('name', pl.Utf8)])),
-                 ('location', pl.Utf8),
-                 ('operation', pl.Boolean),
-                 ('officer_defined_ethnicity', pl.Utf8),
-                 ('type', pl.Utf8),
-                 ('operation_name', pl.Utf8),
-                 ('object_of_search', pl.Utf8)]
+    df_schema = [
+        ("age_range", pl.Utf8),
+        ("outcome", pl.Utf8),
+        ("involved_person", pl.Boolean),
+        ("self_defined_ethnicity", pl.Utf8),
+        ("gender", pl.Utf8),
+        ("legislation", pl.Utf8),
+        ("outcome_linked_to_object_of_search", pl.Boolean),
+        ("datetime", pl.Utf8),
+        ("removal_of_more_than_outer_clothing", pl.Boolean),
+        (
+            "outcome_object",
+            pl.Struct([pl.Field("id", pl.Utf8), pl.Field("name", pl.Utf8)]),
+        ),
+        ("location", pl.Utf8),
+        ("operation", pl.Boolean),
+        ("officer_defined_ethnicity", pl.Utf8),
+        ("type", pl.Utf8),
+        ("operation_name", pl.Utf8),
+        ("object_of_search", pl.Utf8),
+    ]
     for i, url_pair in enumerate(url_pairs):
         force = url_pair[0].replace("-", " ")
         url = url_pair[1]
@@ -67,9 +70,11 @@ def get_stop_search_data(url_pairs: str):
         r = requests.get(url)
         content = json.loads(r.content)
         if content:
-            result = (pl.DataFrame(content, schema=df_schema)
-                        .unnest("outcome_object")
-                        .with_columns(pl.lit(force).alias("force")))
+            result = (
+                pl.DataFrame(content, schema=df_schema)
+                .unnest("outcome_object")
+                .with_columns(pl.lit(force).alias("force"))
+            )
             if df is None:
                 df = result
 
