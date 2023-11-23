@@ -3,6 +3,7 @@ import time
 
 import polars as pl
 import requests
+import tqdm
 
 
 def get_available_data(available_data: str):
@@ -65,11 +66,10 @@ def get_stop_search_data(url_tuples: str):
         ("operation_name", pl.Utf8),
         ("object_of_search", pl.Utf8),
     ]
-    for i, url_tuple in enumerate(url_tuples):
+    for i, url_tuple in tqdm(enumerate(url_tuples)):  # add tqdm
         force = url_tuple[0].replace("-", " ")
         date = url_tuple[1]
         url = url_tuple[2]
-        print(i, "/", len(url_tuples), "Police URLs processed.")
         r = requests.get(url)
         content = json.loads(r.content)
         try:
