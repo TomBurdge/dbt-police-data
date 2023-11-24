@@ -1,9 +1,30 @@
-dbt_demo:
+stop_search:
+  target: dev  # your development environment
   outputs:
+
     dev:
       type: duckdb
       path: /tmp/dbt.duckdb
       extensions:
         - httpfs
         - parquet
-  target: dev
+      settings:
+        s3_endpoint: storage.googleapis.com
+        s3_access_key_id: "{{ env_var('S3_ACCESS_KEY_ID') }}"
+        s3_secret_access_key: "{{ env_var('S3_SECRET_ACCESS_KEY') }}"
+      plugins:
+        - module: delta
+      target: dev
+
+
+
+    prod: # your production environment
+      type: duckdb
+      path: s3://stop-search-prod/dbt.duckdb
+      extensions:
+        - httpfs
+        - parquet
+      settings:
+        s3_endpoint: storage.googleapis.com
+        s3_access_key_id: "{{ env_var('S3_ACCESS_KEY_ID') }}"
+        s3_secret_access_key: "{{ env_var('S3_SECRET_ACCESS_KEY') }}"
