@@ -3,7 +3,7 @@ import time
 
 import polars as pl
 import requests
-import tqdm
+from tqdm import tqdm
 
 
 def get_available_data(available_data: str):
@@ -66,7 +66,7 @@ def get_stop_search_data(url_tuples: str):
         ("operation_name", pl.Utf8),
         ("object_of_search", pl.Utf8),
     ]
-    for i, url_tuple in tqdm(enumerate(url_tuples)):  # add tqdm
+    for i, url_tuple in tqdm(enumerate(url_tuples)):
         force = url_tuple[0].replace("-", " ")
         date = url_tuple[1]
         url = url_tuple[2]
@@ -129,7 +129,3 @@ def model(dbt, session):
     df = get_stop_search_data(force_url_pairs).with_columns(pl.col("force"))
 
     return df
-
-
-if __name__ == "__main__":
-    model("hello", "world")
