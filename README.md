@@ -28,3 +28,10 @@ The data will update incrementally with a DBT pipeline.
 If this were a professional project I would usually (though not always) set up a data pipeline with a data warehouse rather than DuckDB.
 
 But my aim for this project is that the cloud compute cost is very low (<£2/month).
+
+The plan is for the:
+- dbt models to run periodically in a container.
+- The mart models will be materialised as parquet on object storage.
+- The streamlit will read the appropriate materialised tables from cloud storage.
+
+Delta lake format or partitioned parquet overwrites would be great for the object storage, to allow better incremental loading, but the dbt-duckdb nor its delta lake plugin support the functionality that I need yet.
