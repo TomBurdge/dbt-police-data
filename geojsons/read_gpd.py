@@ -1,13 +1,12 @@
 import glob
+import os
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
 
-# Replace 'path/to/your/repository' with the actual path to your repository
 repository_path = "local/geojsons"
 
-# Use glob to get a list of all GeoJSON files in the repository
 geojson_files = glob.glob(f"{repository_path}/*.geojson")
 
 gdfs = []
@@ -19,7 +18,20 @@ for file in geojson_files:
     gdfs.append(gdf)
 all_forces_df = gpd.GeoDataFrame(pd.concat(gdfs, ignore_index=True))
 
-# Display the combined GeoDataFrame
+gcs_path = (
+    f"gs://duckdb-stop-search-{os.environ.get('project', 'dev')}/all_forces.geojson"
+)
+
+# need to authenticate
+all_forces_df.to_file(gcs_path, driver="GeoJSON")
+
+not_ni_df = all_forces_df[all_forces_df["force"] != "northern-ireland"]
+not_ni_df.plot()
+plt.show()
 
 all_forces_df.plot()
+plt.show()
+
+ni_df = all_forces_df[all_forces_df["force"] == "northern-ireland"]
+ni_df.plot()
 plt.show()

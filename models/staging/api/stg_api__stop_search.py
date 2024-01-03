@@ -127,5 +127,6 @@ def model(dbt, session):
     force_url_pairs = get_available_data(url)
 
     df = get_stop_search_data(force_url_pairs).with_columns(pl.col("force"))
+    df.write_parquet("local/forces.parquet")
 
     return df

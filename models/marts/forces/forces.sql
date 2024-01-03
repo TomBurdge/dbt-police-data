@@ -1,3 +1,5 @@
-{{ config(materialized='external', location='file.parquet') }}
+{{ config(materialized='external',
+location='s3://duckdb-stop-search-dev/forces.parquet'
+)}}
 SELECT *
-FROM {{ ref("stg_wikipedia__forces")}}
+FROM {{ ref("int_clean_wikipedia_forces")}}
